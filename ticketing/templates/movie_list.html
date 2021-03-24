@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>لیست فیلم ها</title>
+    </head>
+    <body>
+        <h1>فهرست فیلم ها </h1>
+            <ul>
+                {% if movie_list %}
+                    {%for movie in movie_list%}
+                        <li>{{movie}}</li>
+                    {% endfor %}
+                {% else %}
+                    متاسفانه فیلمی وجود ندارد
+                {% endif %}
+            </ul>
+    </body>
+</html>
