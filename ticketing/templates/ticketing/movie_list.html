@@ -1,22 +1,50 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>لیست فیلم ها</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'ticketing/css/bootstrap.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'ticketing/css/font-awesome.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'ticketing/css/main.css' %}">
     </head>
-    <body>
-        <!-- <a href="/ticketing/cinema/list/"> -->
-        <a href="{% url 'ticketing:cinema_list' %}">
-            فهرست سینماها
-        </a>
-        <h1>فهرست فیلم ها </h1>
-            <ul>
-                {% if movie_list %}
-                    {%for movie in movie_list%}
-                        <li>{{movie}}</li>
-                    {% endfor %}
-                {% else %}
-                    متاسفانه فیلمی وجود ندارد
-                {% endif %}
-            </ul>
+    <body dir="rtl">
+        <div class="col-6 text-left">
+            <!-- <a href="/ticketing/movie/list/"> -->
+            <a class="btn btn-light py-1 px-2" href="{% url 'ticketing:movie_list' %}">
+                <i class="fas fa-film"></i>
+                فهرست فیلمها
+            </a>
+
+            <a class="btn btn-light py-1 px-2" href="{% url 'ticketing:cinema_list' %}">
+                <i class="fas fa-building"></i>
+                فهرست سینماها
+            </a>
+        </div>
+
+        <div class="row align-item-center" id="toolbar">
+            <div class="col-6">
+                <h3>فهرست فیلم ها </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col py-3">
+                
+                    {% if movie_list %}
+                        <ul class="item-list">
+                            {%for movie in movie_list%}
+                                <li>{{movie}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        متاسفانه فیلمی وجود ندارد
+                    {% endif %}
+            </div>
+        </div>
+
+        <script href="{% static 'ticketing/js/jquery-3.4.0.min.js' %}"></script>
+        <script href="{% static 'ticketing/js/bootstrap.bundle.js' %}"></script>
+        <script href="{% static 'ticketing/js/font-awesome.js' %}"></script>
+        <script href="{% static 'ticketing/js/main.js' %}"></script>
     </body>
 </html>
