@@ -4,6 +4,10 @@
         <title>لیست فیلم ها</title>
     </head>
     <body>
+        <!-- <a href="/ticketing/cinema/list/"> -->
+        <a href="{% url 'ticketing:cinema_list' %}">
+            فهرست سینماها
+        </a>
         <h1>فهرست فیلم ها </h1>
             <ul>
                 {% if movie_list %}

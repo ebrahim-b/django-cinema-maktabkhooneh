@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>لیست سینماها</title>
+    </head>
+    <body>
+        <!-- <a href="/ticketing/movie/list/"> -->
+        <a href="{% url 'ticketing:movie_list' %}">
+            فهرست فیلمها
+        </a>
+        <h1>فهرست سینماها </h1>
+            <ul>
+                {% if cinemas %}
+                    {%for cinema in cinemas%}
+                        <li>{{cinema}}</li>
+                    {% endfor %}
+                {% else %}
+                    متاسفانه سینمایی وجود ندارد
+                {% endif %}
+            </ul>
+    </body>
+</html>

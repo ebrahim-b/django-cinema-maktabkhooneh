@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Movie
+from .models import Movie,Cinema
 
 
 def movie_list(request):
@@ -7,4 +7,12 @@ def movie_list(request):
     context = {
         'movie_list':movies
     }
-    return render(request,'movie_list.html',context)
+    return render(request,'ticketing/movie_list.html',context)
+
+
+def cinema_list(request):
+    cinemas = Cinema.objects.all()
+    context = {
+        'cinemas':cinemas
+    }
+    return render(request,'ticketing/cinema_list.html',context)
