@@ -12,10 +12,10 @@ def movie_list(request):
     response_text = """
         <html>
         <head>
-        <title> لیست سینماها </title>
+        <title> لیست فیلم ها </title>
         </head>
         <body>
-            <h1>فهرست سینماهای کشور</h1>
+            <h1>فهرست فیلم ها </h1>
             <ul>
                 {}
             </ul>
