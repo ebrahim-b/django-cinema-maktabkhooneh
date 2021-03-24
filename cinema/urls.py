@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from ticketing import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('movie/list/', views.movie_list)
 ]
