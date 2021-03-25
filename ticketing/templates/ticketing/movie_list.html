@@ -33,7 +33,9 @@
                     {% if movie_list %}
                         <ul class="item-list">
                             {%for movie in movie_list%}
-                                <li>{{movie}}</li>
+                                <a href="{% url 'ticketing:movie_details' movie_id=movie.id %}">
+                                    <li>{{movie}}</li>
+                                </a>
                             {% endfor %}
                         </ul>
                     {% else %}

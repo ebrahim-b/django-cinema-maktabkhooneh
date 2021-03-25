@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Movie,Cinema
 
 
@@ -16,3 +16,10 @@ def cinema_list(request):
         'cinemas':cinemas
     }
     return render(request,'ticketing/cinema_list.html',context)
+
+def movie_details(request, movie_id):
+    movie = get_object_or_404(Movie, pk = movie_id)
+    context = {
+        'movie': movie
+    }
+    return render(request,'ticketing/movie_details.html',context)
