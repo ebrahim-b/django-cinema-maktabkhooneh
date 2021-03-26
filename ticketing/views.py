@@ -5,7 +5,7 @@ from .models import Movie,Cinema
 def movie_list(request):
     movies = Movie.objects.all()
     context = {
-        'movie_list':movies
+        'movies':movies
     }
     return render(request,'ticketing/movie_list.html',context)
 
@@ -23,3 +23,10 @@ def movie_details(request, movie_id):
         'movie': movie
     }
     return render(request,'ticketing/movie_details.html',context)
+
+def cinema_details(request, cinema_id):
+    cinema = Cinema.objects.get(pk=cinema_id)
+    context = {
+        'cinema': cinema
+    }
+    return render(request, 'ticketing/cinema_details.html', context)
