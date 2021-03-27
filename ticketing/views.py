@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Movie,Cinema, ShowTime
+from django.http import HttpResponse
 
 
 def movie_list(request):
@@ -32,8 +33,11 @@ def cinema_details(request, cinema_id):
     return render(request, 'ticketing/cinema_details.html', context)
 
 def showtime_list(request):
-    showtimes = ShowTime.objects.all()
-    context = {
-        'showtimes': showtimes
-    }
-    return render(request, 'ticketing/showtime_list.html', context)
+    if request.user.is_authenticated and request.user.is_active:
+        showtimes = ShowTime.objects.all().order_by('start_time')
+        context = {
+            'showtimes': showtimes
+        }
+        return render(request, 'ticketing/showtime_list.html', context)
+    else:
+        return HttpResponse('ابتدا وارد شوید')
