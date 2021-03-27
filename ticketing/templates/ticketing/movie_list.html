@@ -16,7 +16,7 @@
                 <ul class="item-list">
                     {% for movie in movies %}
                         <li>
-                            <a href="{% url "ticketing:movie_details" movie_id=movie.id %}">
+                            <a href="{% url 'ticketing:movie_details' movie_id=movie.id %}">
                                 <i class="fas fa-film"></i>
                                 {{ movie }}
                                 <small class="text-muted">

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Movie,Cinema
+from .models import Movie,Cinema, ShowTime
 
 
 def movie_list(request):
@@ -25,8 +25,15 @@ def movie_details(request, movie_id):
     return render(request,'ticketing/movie_details.html',context)
 
 def cinema_details(request, cinema_id):
-    cinema = Cinema.objects.get(pk=cinema_id)
+    cinema = get_object_or_404(Cinema, pk=cinema_id)
     context = {
         'cinema': cinema
     }
     return render(request, 'ticketing/cinema_details.html', context)
+
+def showtime_list(request):
+    showtimes = ShowTime.objects.all()
+    context = {
+        'showtimes': showtimes
+    }
+    return render(request, 'ticketing/showtime_list.html', context)
