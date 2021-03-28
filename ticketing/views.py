@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Movie,Cinema, ShowTime, Ticket
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 def movie_list(request):
@@ -55,6 +56,21 @@ def showtime_details(request, showtime_id):
     context = {
         'showtime': showtime
     }
+
+    if request.method == 'POST':
+        try:
+            seat_count = int(request.POST['seat_count'])
+            assert showtime.status == ShowTime.SALE_OPEN, 'فروش بلیت برای این سانس ممکن نیست'
+            assert showtime.free_seats >= seat_count, 'سانس به اندازه کافی صندلی خالی ندارد'
+            total_price = showtime.price * seat_count
+            #assert request.user.profile.balance > total_price, 'موجودی کافی نیست'
+            assert request.user.profile.spend(total_price), 'موجودی کافی نیست'
+            showtime.reserve_seats(seat_count)
+            ticket = Ticket.objects.create(showtime=showtime, customer=request.user.profile, seat_count=seat_count)
+        except Exception as e:
+            context['error'] = str(e) 
+        else:
+            return HttpResponseRedirect(reverse('ticketing:ticket_details', kwargs={'ticket_id': ticket.id}))  
     return render(request, 'ticketing/showtime_details.html', context)
 
 
