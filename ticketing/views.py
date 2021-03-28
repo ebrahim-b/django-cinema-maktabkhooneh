@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Movie,Cinema, ShowTime
+from .models import Movie,Cinema, ShowTime, Ticket
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 
 def movie_list(request):
@@ -47,3 +48,29 @@ def showtime_list(request):
         'showtimes': showtimes
     }
     return render(request, 'ticketing/showtime_list.html', context)
+
+@login_required
+def showtime_details(request, showtime_id):
+    showtime = ShowTime.objects.get(pk=showtime_id)
+    context = {
+        'showtime': showtime
+    }
+    return render(request, 'ticketing/showtime_details.html', context)
+
+
+@login_required
+def ticket_list(request):
+    tickets = Ticket.objects.filter(customer=request.user.profile).order_by('-order_time')
+    context = {
+        'tickets': tickets
+    }
+    return render(request, 'ticketing/ticket_list.html', context)
+
+
+@login_required
+def ticket_details(request, ticket_id):
+    ticket = Ticket.objects.get(pk=ticket_id)
+    context = {
+        'ticket': ticket
+    }
+    return render(request, 'ticketing/ticket_details.html', context)
