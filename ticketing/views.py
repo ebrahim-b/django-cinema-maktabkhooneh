@@ -33,11 +33,17 @@ def cinema_details(request, cinema_id):
     return render(request, 'ticketing/cinema_details.html', context)
 
 def showtime_list(request):
-    if request.user.is_authenticated and request.user.is_active:
-        showtimes = ShowTime.objects.all().order_by('start_time')
-        context = {
-            'showtimes': showtimes
-        }
-        return render(request, 'ticketing/showtime_list.html', context)
-    else:
-        return HttpResponse('ابتدا وارد شوید')
+    # if request.user.is_authenticated and request.user.is_active:
+    #     showtimes = ShowTime.objects.all().order_by('start_time')
+    #     context = {
+    #         'showtimes': showtimes
+    #     }
+    #     return render(request, 'ticketing/showtime_list.html', context)
+    # else:
+    #     return HttpResponse('ابتدا وارد شوید')
+
+    showtimes = ShowTime.objects.all().order_by('start_time')
+    context = {
+        'showtimes': showtimes
+    }
+    return render(request, 'ticketing/showtime_list.html', context)
