@@ -36,24 +36,27 @@ def cinema_details(request, cinema_id):
     return render(request, 'ticketing/cinema_details.html', context)
 
 def showtime_list(request):
-    # if request.user.is_authenticated and request.user.is_active:
-    #     showtimes = ShowTime.objects.all().order_by('start_time')
-    #     context = {
-    #         'showtimes': showtimes
-    #     }
-    #     return render(request, 'ticketing/showtime_list.html', context)
-    # else:
-    #     return HttpResponse('ابتدا وارد شوید')
-
+    showtimes = ShowTime.objects.all()
     search_form = ShowTimeSearchForm(request.GET)
     if search_form.is_valid():
-        movie_name = search_form.cleaned_data['movie_name']
-        showtimes = ShowTime.objects.filter(movie__name__contains=movie_name).order_by('start_time')
-    else:
-        showtimes = ShowTime.objects.all().order_by('start_time')
+        showtimes = showtimes.filter(movie__name__contains=search_form.cleaned_data['movie_name'])
+        if search_form.cleaned_data['sale_is_open']:
+            showtimes = showtimes.filter(status=ShowTime.SALE_OPEN)
+        if search_form.cleaned_data['movie_length_min'] is not None:
+            showtimes = showtimes.filter(movie__length__gte=search_form.cleaned_data['movie_length_min'])
+        if search_form.cleaned_data['movie_length_max'] is not None:
+            showtimes = showtimes.filter(movie__length__lte=search_form.cleaned_data['movie_length_max'])
+        if search_form.cleaned_data['cinema'] is not None:
+            showtimes = showtimes.filter(cinema=search_form.cleaned_data['cinema'])
+        min_price, max_price = search_form.get_price_boundries()
+        if min_price is not None:
+            showtimes = showtimes.filter(price__gt=min_price)
+        if max_price is not None:
+            showtimes = showtimes.filter(price__lte=max_price)
+    showtimes = showtimes.order_by('start_time')
     context = {
         'showtimes': showtimes,
-        'search_form': search_form,
+        'search_form': search_form
     }
     return render(request, 'ticketing/showtime_list.html', context)
 
