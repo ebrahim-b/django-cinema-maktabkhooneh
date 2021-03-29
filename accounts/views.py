@@ -4,6 +4,9 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
+from .forms import PaymentForm,ProfileForm,MyUserForm
+from .models import Payment
+
 def login_view(request):
     next_url = request.GET.get('next')
     if request.method == 'POST':
@@ -41,5 +44,47 @@ def profile_details(request):
     }
     return render(request, 'accounts/profile_details.html', context)
 
+@login_required
+def payment_list(request):
+    payments = Payment.objects.filter(profile=request.user.profile).order_by('-transaction_time')
+    context = {
+        'payments': payments
+    }
+    return render(request, 'accounts/payment_list.html', context)
+
+
+@login_required
+def payment_create(request):
+    if request.method == 'POST':
+        payment_form = PaymentForm(request.POST)
+        if payment_form.is_valid():
+            payment = payment_form.save(commit=False)
+            payment.profile = request.user.profile
+            payment.save()
+            request.user.profile.deposit(payment.amount)
+            return HttpResponseRedirect(reverse('accounts:payment_list'))
+    else:
+        payment_form = PaymentForm()
+    context = {
+        'payment_form': payment_form
+    }
+    return render(request, 'accounts/payment_create.html', context)
+
+
+@login_required
 def profile_edit(request):
-    pass
+    if request.method == 'POST':
+        user_form = MyUserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, files=request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return HttpResponseRedirect(reverse('accounts:profile_details'))
+    else:
+        user_form = MyUserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'accounts/profile_edit.html', context)
