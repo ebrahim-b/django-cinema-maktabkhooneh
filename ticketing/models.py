@@ -74,6 +74,27 @@ class ShowTime(models.Model):
     def is_full(self):
         return self.free_seats == 0
 
+    def open_sale(self):
+        if self.status == ShowTime.SALE_NOT_STARTED:
+            self.status = ShowTime.SALE_OPEN
+            self.save()
+        else:
+            raise Exception('Sale has been started before')
+
+    def close_sale(self):
+        if self.status == ShowTime.SALE_OPEN:
+            self.status = ShowTime.SALE_CLOSED
+            self.save()
+        else:
+            raise Exception('Sale is not open')
+
+    def expire_showtime(self, is_canceled=False):
+        if self.status not in (ShowTime.MOVIE_PLAYED, ShowTime.SHOW_CANCELED):
+            self.status = ShowTime.SHOW_CANCELED if is_canceled else ShowTime.MOVIE_PLAYED
+            self.save()
+        else:
+            raise Exception('Show has been expired before')
+
     def reserve_seats(self, seat_count):
         assert isinstance(seat_count, int) and seat_count > 0, 'Number of seats should be a positive integer'
         assert self.status == ShowTime.SALE_OPEN, 'Sale is not open'
